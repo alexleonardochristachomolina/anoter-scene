@@ -3,6 +3,23 @@ import * as THREE from 'three'
 import { Mesh, Scene } from 'three';
 import gsap from 'gsap'
 
+//Size
+const size = {
+    width: 800,
+    height: 600
+}
+
+//Cursor
+const m = {
+    x: 0,
+    y: 0,
+}
+window.addEventListener('mousemove', (e) => {
+    m.x = e.clientX / size.width - 0.5
+    m.y = -(e.clientX / size.height - 0.5)
+    console.log(m.x)
+})
+
 
 //console.log(THREE)
 
@@ -11,11 +28,7 @@ import gsap from 'gsap'
 
 const canvas = document.querySelector('canvas.webgl');
 
-//Size
-const size = {
-    width: 800,
-    height: 600
-}
+
 
 //Scene
 const set = new THREE.Scene()
@@ -56,8 +69,11 @@ cube3.position.x = -2
 group.add(cube3)
 
 //Camera
-const eye = new THREE.PerspectiveCamera(75, size.width/size.height);
+const eye = new THREE.PerspectiveCamera(75, size.width/size.height, 1, 1000);
+// const aspect = size.width/size.height
+// const eye = new THREE.OrthographicCamera(-1 * aspect, 1 * aspect, 1, -1, 0.1, 100)
 eye.position.z = 3
+// console.log(eye.position.length())
 set.add(eye)
 
 //eye.lookAt(mesh.position)
@@ -104,6 +120,14 @@ const tickTock = () =>
    // const deltaTime = currentTime - time
    // time = currentTime
 
+   //Update Camera
+//    eye.position.x = m.x * 10
+//    eye.position.y = m.y * 10
+    eye.position.x = Math.sin(m.x * Math.PI * 2) * 3
+    eye.position.z = Math.cos(m.x * Math.PI * 2) * 3
+    eye.position.y = m.y * 5
+   eye.lookAt(group.position)
+//new THREE.Vector3()
    // console.log(deltaTime)
     //Update Object
     //cube3.rotation.y = elapsedTime * Math.PI * 2
