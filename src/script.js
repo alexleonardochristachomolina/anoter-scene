@@ -2,12 +2,48 @@ import './style.css'
 import * as THREE from 'three'
 import { Mesh, Scene } from 'three';
 import gsap from 'gsap'
+import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
 //Size
 const size = {
-    width: 800,
-    height: 600
+    width: window.innerWidth,
+    height: window.innerHeight
 }
+
+window.addEventListener('resize', () =>
+{
+    //update size
+    size.width = window.innerWidth,
+    size.height = window.innerHeight
+
+    //Update camera
+    eye.aspect = size.width / size.height
+    eye.updateProjectionMatrix()
+
+    //Update Renderer
+    renderer.setSize(size.width, size.height)
+
+})
+
+window.addEventListener('dblclick', () => 
+{
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
+    if(!fullscreenElement)
+{
+    if(canvas.requestFullscreen)
+    {
+        canvas.requestFullScreen()
+    }
+    else if(canvas.webkitRequestFullscreen)
+    {
+        canvas.webkitRequestFullscreen()
+    }
+}
+else
+{
+    document.exitFullscreen()
+}
+})
 
 //Cursor
 const m = {
@@ -76,6 +112,12 @@ eye.position.z = 3
 // console.log(eye.position.length())
 set.add(eye)
 
+//Controls
+const controls = new OrbitControls(eye, canvas)
+controls.enableDamping = true
+// controls.target.y = 2
+// controls.update()
+
 //eye.lookAt(mesh.position)
 //new THREE.Vector3(3,0,0)
 
@@ -100,6 +142,8 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 renderer.setSize(size.width, size.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+//(Math.min(window.devicePixelRatio, 2))
 
 //Time
 //let time = Date.now()
@@ -123,10 +167,10 @@ const tickTock = () =>
    //Update Camera
 //    eye.position.x = m.x * 10
 //    eye.position.y = m.y * 10
-    eye.position.x = Math.sin(m.x * Math.PI * 2) * 3
-    eye.position.z = Math.cos(m.x * Math.PI * 2) * 3
-    eye.position.y = m.y * 5
-   eye.lookAt(group.position)
+    // eye.position.x = Math.sin(m.x * Math.PI * 2) * 3
+    // eye.position.z = Math.cos(m.x * Math.PI * 2) * 3
+    // eye.position.y = m.y * 5
+    // eye.lookAt(group.position)
 //new THREE.Vector3()
    // console.log(deltaTime)
     //Update Object
@@ -135,6 +179,7 @@ const tickTock = () =>
    // eye.position.x = Math.sin(elapsedTime)
    // eye.lookAt(cube3.position)
     //Render 
+    controls.update()
     renderer.render(set, eye)
 
     window.requestAnimationFrame(tickTock)
