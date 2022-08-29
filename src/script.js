@@ -1,6 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
-import { Mesh, Scene } from 'three';
+import { Geometry, Mesh, Scene } from 'three';
 import gsap from 'gsap'
 import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
@@ -78,34 +78,94 @@ const set = new THREE.Scene()
 // mesh.position.x = 0
 // set.add(mesh)
 
+// const geometry = new THREE.Geometry()
+
+// for(let i = 0; i < 50; i++)
+// {
+//     for(let j = 0; j < 3; j++)
+//     {
+//         geometry.vertices.push(new THREE.Vector3(
+//             (Math.random() - 0.5) * 4,
+//             (Math.random() - 0.5) * 4,
+//             (Math.random() - 0.5) * 4,
+//         ))
+//     }
+//     const verticesIndex = i * 3
+//     geometry.faces.push(new THREE.Face3(
+//         verticesIndex,
+//         verticesIndex + 1,
+//         verticesIndex + 2
+//     ))
+// }
+
+// const material = new THREE.MeshBasicMaterial({
+//     color: 0xff0000
+// })
+
+// const mesh = new THREE.Mesh(geometry, material)
+// set.add(mesh)
+const geometry = new THREE.BufferGeometry()
+
+const count = 50
+const positionsArray = new Float32Array(count * 3 * 3)
+
+for (let i = 0; i < count * 3 * 3; i++)
+{
+    positionsArray[i] = (Math.random() - 0.5) * 4
+}
+
+const positionAttrib = new THREE.BufferAttribute(positionsArray, 3)
+
+
+geometry.setAttribute('position', positionAttrib)
+
+const material = new THREE.MeshBasicMaterial({
+    color: 0xff0000,
+    wireframe: true
+})
+
+const mesh = new THREE.Mesh(geometry, material)
+set.add(mesh)
+
+
 const group = new THREE.Group()
 group.position.y = -1
 group.rotation.y = 1
 set.add(group)
 
+
 const cube1 = new THREE.Mesh(
-    new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({color: 0xff00ff})
+    new THREE.BoxBufferGeometry(1,3,1, 2, 1, 3),
+    new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: true})
 )
 cube1.position.y = 1
 group.add(cube1)
 
 const cube2 = new THREE.Mesh(
-    new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({color: 0x00ff2a})
+    new THREE.BoxBufferGeometry(1,1,1, 4, 4, 4),
+    new THREE.MeshBasicMaterial({color: 0x00ff2a, wireframe: true})
 )
 cube2.position.x = 2
 group.add(cube2)
 
 const cube3 = new THREE.Mesh(
     new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({color: 0xffff2a})
+    new THREE.MeshBasicMaterial({color: 0xffff2a, wireframe: true})
 )
 cube3.position.x = -2
 group.add(cube3)
 
+const cube4 = new THREE.Mesh(
+    new THREE.BoxGeometry(1,1,1),
+    new THREE.MeshBasicMaterial({color: 0xffff2a, wireframe: true})
+)
+cube4.position.x = -2
+group.add(cube4)
+
+
+
 //Camera
-const eye = new THREE.PerspectiveCamera(75, size.width/size.height, 1, 1000);
+const eye = new THREE.PerspectiveCamera(75, size.width/size.height, 0.1, 100);
 // const aspect = size.width/size.height
 // const eye = new THREE.OrthographicCamera(-1 * aspect, 1 * aspect, 1, -1, 0.1, 100)
 eye.position.z = 3
