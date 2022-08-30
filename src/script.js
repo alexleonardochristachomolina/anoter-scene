@@ -3,6 +3,12 @@ import * as THREE from 'three'
 import { Geometry, Mesh, Scene } from 'three';
 import gsap from 'gsap'
 import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+import * as dat from 'dat.gui'
+
+//Debug
+const gui = new dat.GUI()
+
+
 
 //Size
 const size = {
