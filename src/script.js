@@ -4,12 +4,19 @@ import { Geometry, Mesh, Scene } from 'three';
 import gsap from 'gsap'
 import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
+//import imageSource from './assets/pipe/color.jpg'
 
 //Debug
-const gui = new dat.GUI()
+//console.log(imageSource)
 
-
-
+//Textures
+const textureLoader = new THREE.TextureLoader()
+const Texture = textureLoader.load('/assets/colorGlass/color.jpg')
+const Texture1 = textureLoader.load('/assets/building/color.jpg')
+const Texture2 = textureLoader.load('/assets/metalRoses/color.jpg',
+() => {
+    
+})
 //Size
 const size = {
     width: window.innerWidth,
@@ -110,28 +117,28 @@ const set = new THREE.Scene()
 
 // const mesh = new THREE.Mesh(geometry, material)
 // set.add(mesh)
-const geometry = new THREE.BufferGeometry()
+// const geometry = new THREE.BufferGeometry()
 
-const count = 50
-const positionsArray = new Float32Array(count * 3 * 3)
+// const count = 50
+// const positionsArray = new Float32Array(count * 3 * 3)
 
-for (let i = 0; i < count * 3 * 3; i++)
-{
-    positionsArray[i] = (Math.random() - 0.5) * 4
-}
+// for (let i = 0; i < count * 3 * 3; i++)
+// {
+//     positionsArray[i] = (Math.random() - 0.5) * 4
+// }
 
-const positionAttrib = new THREE.BufferAttribute(positionsArray, 3)
+// const positionAttrib = new THREE.BufferAttribute(positionsArray, 3)
 
 
-geometry.setAttribute('position', positionAttrib)
+// geometry.setAttribute('position', positionAttrib)
 
-const material = new THREE.MeshBasicMaterial({
-    color: 0xff0000,
-    wireframe: true
-})
+// const material = new THREE.MeshBasicMaterial({
+//     color: 0xff0000,
+//     wireframe: true
+// })
 
-const mesh = new THREE.Mesh(geometry, material)
-set.add(mesh)
+// const mesh = new THREE.Mesh(geometry, material)
+// set.add(mesh)
 
 
 const group = new THREE.Group()
@@ -140,34 +147,68 @@ group.rotation.y = 1
 set.add(group)
 
 
+const parameters = {
+    color: 0xffff00,
+    spin: () => {
+        gsap.to(mesh.rotation, {duration: 1,y: mesh.rotation.y + 10})
+    }
+}
+
+
 const cube1 = new THREE.Mesh(
     new THREE.BoxBufferGeometry(1,3,1, 2, 1, 3),
-    new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: true})
+    new THREE.MeshBasicMaterial({map: Texture1})
 )
 cube1.position.y = 1
 group.add(cube1)
 
 const cube2 = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(1,1,1, 4, 4, 4),
-    new THREE.MeshBasicMaterial({color: 0x00ff2a, wireframe: true})
+    new THREE.SphereGeometry(1, 32),
+    new THREE.MeshBasicMaterial({map: Texture})
 )
 cube2.position.x = 2
 group.add(cube2)
 
-const cube3 = new THREE.Mesh(
-    new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({color: 0xffff2a, wireframe: true})
-)
-cube3.position.x = -2
-group.add(cube3)
+// const cube3 = new THREE.Mesh(
+//     new THREE.BoxGeometry(1,1,1),
+//     new THREE.MeshBasicMaterial({map: texture2})
+// )
+// cube1.visible = false
+// cube3.position.x = -2
+// group.add(cube3)
 
+
+const names = new THREE.MeshBasicMaterial({map: Texture2})
 const cube4 = new THREE.Mesh(
     new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({color: 0xffff2a, wireframe: true})
+    names
 )
 cube4.position.x = -2
 group.add(cube4)
 
+//Debug
+const gui = new dat.GUI({closed: true, width: 400})
+gui.hide()
+
+
+gui.add(group.position, 'y')
+.min(-3)
+.max(3)
+.step(0.01)
+.name('Elevation')
+
+gui.add(cube1, 'visible')
+gui.add(names, 'wireframe')
+gui
+.addColor(parameters, 'color')
+.onChange(() => {
+    names.color.set(parameters.color)
+})
+
+gui.add(parameters, 'spin')
+
+//gui.add(group.position, 'x', -3, 3, 0.01)
+//gui.add(group.position, 'z', -3, 3, 0.01)
 
 
 //Camera
@@ -177,6 +218,8 @@ const eye = new THREE.PerspectiveCamera(75, size.width/size.height, 0.1, 100);
 eye.position.z = 3
 // console.log(eye.position.length())
 set.add(eye)
+
+
 
 //Controls
 const controls = new OrbitControls(eye, canvas)
@@ -218,9 +261,9 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 
 
-gsap.to(cube1.position, {duration: 1, delay: 4, y:0})
-gsap.to(cube3.position, {duration: 1, delay: 2, x:-1})
-gsap.to(cube2.position, {duration: 1, delay: 3, x:1})
+//gsap.to(cube1.position, {duration: 1, delay: 4, y:0})
+//gsap.to(cube3.position, {duration: 1, delay: 2, x:-1})
+//gsap.to(cube2.position, {duration: 1, delay: 3, x:1})
 //Animation
 const tickTock = () => 
 {
