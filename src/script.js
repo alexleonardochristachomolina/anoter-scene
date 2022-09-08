@@ -10,13 +10,37 @@ import * as dat from 'dat.gui'
 //console.log(imageSource)
 
 //Textures
-const textureLoader = new THREE.TextureLoader()
+
+
+const loadingManager = new THREE.LoadingManager()
+
+
+
+//texture
+const textureLoader = new THREE.TextureLoader(loadingManager)
 const Texture = textureLoader.load('/assets/colorGlass/color.jpg')
 const Texture1 = textureLoader.load('/assets/building/color.jpg')
-const Texture2 = textureLoader.load('/assets/metalRoses/color.jpg',
-() => {
+const metalRoses = textureLoader.load('/assets/metalRoses/color.jpg')
+const ambientMetalRoses = textureLoader.load('/assets/metalRoses/ambient.jpg')
+const heightMetalRoses = textureLoader.load('/assets/metalRoses/height.png')
+const metalMetalRoses = textureLoader.load('/assets/metalRoses/metal.jpg')
+const normalMetalRoses = textureLoader.load('/assets/metalRoses/normal.jpg')
+const opacityMetalRoses = textureLoader.load('/assets/metalRoses/opacity.jpg')
+const roughMetalRoses = textureLoader.load('/assets/metalRoses/rough.jpg')
+
+// metalRoses.repeat.x = 2
+// metalRoses.repeat.y = 3
+// metalRoses.wrapS = THREE.RepeatWrapping
+// metalRoses.wrapT = THREE.RepeatWrapping
+// metalRoses.offset.x = 0.5 
+// metalRoses.rotation = Math.PI * 0.25
+// metalRoses.center.x = 0.5
+// metalRoses.center.y = 0.5
+
+metalRoses.minFilter = THREE.NearestFilter
+Texture.minFilter = THREE.NearestFilter
+Texture1.minFilter = THREE.NearestFilter
     
-})
 //Size
 const size = {
     width: window.innerWidth,
@@ -154,11 +178,13 @@ const parameters = {
     }
 }
 
-
+const geometry = new THREE.BoxBufferGeometry(1,3,1, 2, 1, 3)
+const material = new THREE.MeshBasicMaterial({map: Texture1})
+console.log(geometry.attributes.uv)
 const cube1 = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(1,3,1, 2, 1, 3),
-    new THREE.MeshBasicMaterial({map: Texture1})
+    geometry,material
 )
+    
 cube1.position.y = 1
 group.add(cube1)
 
@@ -178,7 +204,7 @@ group.add(cube2)
 // group.add(cube3)
 
 
-const names = new THREE.MeshBasicMaterial({map: Texture2})
+const names = new THREE.MeshBasicMaterial({map: metalRoses})
 const cube4 = new THREE.Mesh(
     new THREE.BoxGeometry(1,1,1),
     names
