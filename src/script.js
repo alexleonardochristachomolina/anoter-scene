@@ -37,6 +37,7 @@ const roughMetalRoses = textureLoader.load('/assets/metalRoses/rough.jpg')
 // metalRoses.center.x = 0.5
 // metalRoses.center.y = 0.5
 
+metalRoses.generateMipmaps = false
 metalRoses.minFilter = THREE.NearestFilter
 Texture.minFilter = THREE.NearestFilter
 Texture1.minFilter = THREE.NearestFilter
@@ -181,19 +182,19 @@ const parameters = {
 const geometry = new THREE.BoxBufferGeometry(1,3,1, 2, 1, 3)
 const material = new THREE.MeshBasicMaterial({map: Texture1})
 console.log(geometry.attributes.uv)
-const cube1 = new THREE.Mesh(
+const building = new THREE.Mesh(
     geometry,material
 )
     
-cube1.position.y = 1
-group.add(cube1)
+building.position.y = 1
+group.add(building)
 
-const cube2 = new THREE.Mesh(
+const glass = new THREE.Mesh(
     new THREE.SphereGeometry(1, 32),
     new THREE.MeshBasicMaterial({map: Texture})
 )
-cube2.position.x = 2
-group.add(cube2)
+glass.position.x = 2
+group.add(glass)
 
 // const cube3 = new THREE.Mesh(
 //     new THREE.BoxGeometry(1,1,1),
@@ -205,12 +206,12 @@ group.add(cube2)
 
 
 const names = new THREE.MeshBasicMaterial({map: metalRoses})
-const cube4 = new THREE.Mesh(
+const roses = new THREE.Mesh(
     new THREE.BoxGeometry(1,1,1),
     names
 )
-cube4.position.x = -2
-group.add(cube4)
+roses.position.x = -2
+group.add(roses)
 
 //Debug
 const gui = new dat.GUI({closed: true, width: 400})
@@ -223,7 +224,7 @@ gui.add(group.position, 'y')
 .step(0.01)
 .name('Elevation')
 
-gui.add(cube1, 'visible')
+gui.add(roses, 'visible')
 gui.add(names, 'wireframe')
 gui
 .addColor(parameters, 'color')
@@ -282,7 +283,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 //Time
 //let time = Date.now()
-//const clock = new THREE.Clock()
+const clock = new THREE.Clock()
 
 
 
@@ -293,7 +294,13 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 //Animation
 const tickTock = () => 
 {
-    //const elapsedTime = clock.getElapsedTime()
+    const elapsedTime = clock.getElapsedTime()
+    building.rotation.y = 0.1 * elapsedTime
+    glass.rotation.y = 0.1 * elapsedTime
+    roses.rotation.y = 0.1 * elapsedTime
+
+    glass.rotation.x = 0.1 * elapsedTime
+
    // console.log(elapsedTime)
    // const currentTime = Date.now()
    // const deltaTime = currentTime - time
